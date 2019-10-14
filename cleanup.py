@@ -7,10 +7,18 @@ def get_parent_collection():
     assumes all Node_data_Viz collections are children to only one collection
     """
     parent_coll = None # if remains None 'Node_data_Viz collection does not exist
+    
     for coll in bpy.data.collections:
+        Debug_Tools.debug_msg('checking in {}'.format(coll.name),False)
         for child_coll in coll.children:
+            Debug_Tools.debug_msg('child collection {}'.format(child_coll.name),False)
             if 'Node_data_Viz' in child_coll.name:
                 parent_coll = coll
+                break
+    if parent_coll == None:
+        Debug_Tools.debug_msg("Node_data_Viz.xxx collections does not exist in this file")
+    else:
+        Debug_Tools.debug_msg('parent collection for the Node_data_Viz.xxx collections: {}'.format(parent_coll))
     return parent_coll
 
 def delete_collection_objects(collection_name):
@@ -32,9 +40,9 @@ def run_cleanup():
     """
     step 1a: delete all objects if true
     """
+    Debug_Tools.debug_msg("Running Cleanup")
     if True:
         Debug_Tools.debug_msg('deleting objects')
-        # do something
         bpy.ops.object.select_all(action='SELECT') # select all objects
         Debug_Tools.debug_msg('List of names of deleted objects:')
         for object_ in bpy.data.objects:
@@ -52,8 +60,9 @@ def run_cleanup():
             break
     if coll_exists:
         parent_coll = get_parent_collection()
-        for coll in parent_coll.children:
-            # delete collection objects
-            delete_collection_objects(coll.name)
-            # delete collection
-            bpy.data.collections.remove(bpy.data.collections[coll.name])
+        if parent_coll != None:
+            for coll in parent_coll.children:
+                # delete collection objects
+                delete_collection_objects(coll.name)
+                # delete collection
+                bpy.data.collections.remove(bpy.data.collections[coll.name])
