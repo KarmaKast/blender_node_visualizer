@@ -8,7 +8,8 @@ from . import node_dataLoader
 class CreateViz_OT_Operator(bpy.types.Operator):
     bl_idname = "view3d.create_ot_viz"
     bl_label = "Create Viz Operator"
-    bl_description = "Create Visualization"
+    bl_description = "Creates Visualization of Node data"
+    
     
     def execute(self, context):
         # do something

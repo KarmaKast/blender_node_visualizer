@@ -25,11 +25,23 @@ bl_info = {
 import bpy
 
 from .create_viz import CreateViz_OT_Operator
-from .main_panel import Main_PT_Panel
+from .main_panel import Main_PT_Panel, MyProperties
 
 classes = (
     CreateViz_OT_Operator,
-    Main_PT_Panel
+    Main_PT_Panel,
+    MyProperties
     )
 
-register, unregister = bpy.utils.register_classes_factory(classes)
+#register, unregister = bpy.utils.register_classes_factory(classes)
+
+def register():
+    for cls_ in classes:
+        bpy.utils.register_class(cls_)
+    bpy.types.Scene.my_props = bpy.props.PointerProperty(type=MyProperties)
+    
+def unregister():
+    for cls_ in classes:
+        bpy.utils.unregister_class(cls_)
+    del bpy.types.Scene.my_props
+    
