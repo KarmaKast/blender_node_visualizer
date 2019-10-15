@@ -105,12 +105,16 @@ class CreateViz_OT_Operator(bpy.types.Operator):
             occupied_locs = []
             def generate_rand_pos():
                 # TODO ignore already occupied locations
-                max = 25
+                available_locations = []
                 for i in range(26):
-                    if bpy.data.objects['corner_piece'].data.vertices[i].co in occupied_locs:
-                        max -= 1
-                Debug_Tools.debug_msg('max available next locs: {}'.format(max))
-                return random.randint(0,25)
+                    if bpy.data.objects['corner_piece'].data.vertices[i].co not in occupied_locs:
+                        available_locations.append(i)
+                # pick a random location from available_locations
+                Debug_Tools.debug_msg('available locations: {}'.format(available_locations), False)
+                rand_pos = random.randint(0, len(available_locations)-1)
+                # still there is a possibility that there is no available location nearby. 
+                return available_locations[rand_pos]
+            
             # TODO center cursor
             bpy.ops.view3d.snap_cursor_to_center()
             # TODO create a empty/box with respective node_ID
