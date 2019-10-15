@@ -41,7 +41,7 @@ def run_cleanup():
     step 1a: delete all objects if true
     """
     Debug_Tools.debug_msg("Running Cleanup")
-    if False:
+    if True:
         Debug_Tools.debug_msg('deleting objects')
         bpy.ops.object.select_all(action='SELECT') # select all objects
         Debug_Tools.debug_msg('List of names of deleted objects:')

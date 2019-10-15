@@ -1,4 +1,16 @@
+import bpy
+
 from . import nodeLib
+
+def load_data():
+    node_data = None
+    path = bpy.context.scene.my_props.select_file_prop
+    # hopefully a import export feature is added to nodeLib.    
+    #node_data = nodeLib.file.import(path) # probably a json file
+    if node_data == None:
+        node_data = create_sample_database()
+        
+    return node_data
 
 def create_sample_database():
     bill = nodeLib.node.Node_Manager.create_node(node_ID = {'ID':'01','node_name':'bill'})
@@ -78,6 +90,8 @@ def create_sample_database():
         rel_from_to_to = "group", 
         rel_to_to_from = "member"
         )    
+    bill_pack = nodeLib.node.Node_Pack.create_pack(bill)
+    nodeLib.node.Node_Pack.describe(bill_pack, 'compact')
     #nodeLib.debug.Debug_Node.describe(bill,'compact')
     
-    return bill
+    return bill_pack

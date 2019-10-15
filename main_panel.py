@@ -37,7 +37,6 @@ class Main_PT_Panel(bpy.types.Panel):
         my_props = sce.my_props
         
         layout.prop(my_props, 'select_file_prop')
-        #layout.prop(mytool, 'my_int', text='Integer Property')
         
         row = layout.row()
         row.operator('view3d.create_ot_viz', text = "Create Visialization")
