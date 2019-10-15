@@ -65,44 +65,82 @@ class CreateViz_OT_Operator(bpy.types.Operator):
         step 4: create viz
         """
         #createViz(nodepack, visualiser)
-        def corner_prescribe():
-            bpy.ops.mesh.primitive_cube_add(enter_editmode=True, location=(0,0,0))
-            bpy.context.active_object.name = 'corner_piece'
-            bpy.ops.mesh.subdivide()
-            bpy.ops.mesh.delete(type='ONLY_FACE')
-            bpy.ops.object.editmode_toggle()
-            bpy.data.objects['corner_piece'].hide_viewport = True
-            return bpy.data.objects[-1]
-            
-        corner_piece = corner_prescribe()
         
-        def visualiser1(nodePack: nodeLib.structure.node_structs.NodePack_Struct):
+        
+        def generate_empties(nodePack: nodeLib.structure.node_structs.NodePack_Struct):
+            def corner_piece_generator(regenerate = True):
+                layer_coll = bpy.context.view_layer.layer_collection.children['Node_data_Viz']
+                bpy.context.view_layer.active_layer_collection = layer_coll
+                
+                def generate_obj():
+                    bpy.ops.mesh.primitive_cube_add(enter_editmode=True, location=(0,0,0))
+                    bpy.context.active_object.name = 'corner_piece'
+                    bpy.ops.mesh.subdivide()
+                    bpy.ops.mesh.delete(type='ONLY_FACE')
+                    bpy.ops.object.editmode_toggle()
+                    bpy.data.objects['corner_piece'].hide_set(True)
+                    return bpy.data.objects['corner_piece']
+                
+                # TODO if corner_piece already exists regenerate it if true
+                # TODO check if corner_piece already exists
+                if 'corner_piece' in bpy.data.objects:
+                    # TODO if true delete it and generate it
+                    if regenerate:
+                        # TODO delete the object
+                        bpy.data.objects.remove(bpy.data.objects['corner_piece'])
+                        generate_obj()
+                    else:
+                        # do nothing
+                        return bpy.data.objects['corner_piece']
+                else:
+                    # TODO generate the object
+                    generate_obj()
+                
+                
+            corner_piece = corner_piece_generator(False)
+            
+            layer_coll = bpy.context.view_layer.layer_collection.children['Node_data_Viz'].children[-1]
+            bpy.context.view_layer.active_layer_collection = layer_coll
+            
+            occupied_locs = []
+            def generate_rand_pos():
+                # TODO ignore already occupied locations
+                available_locations = []
+                for i in range(26):
+                    if bpy.data.objects['corner_piece'].data.vertices[i].co not in occupied_locs:
+                        available_locations.append(i)
+                # pick a random location from available_locations
+                Debug_Tools.debug_msg('available locations: {}'.format(available_locations), False)
+                rand_pos = random.randint(0, len(available_locations)-1)
+                # still there is a possibility that there is no available location nearby. 
+                return available_locations[rand_pos]
+            
             # TODO center cursor
             bpy.ops.view3d.snap_cursor_to_center()
             # TODO create a empty/box with respective node_ID
             Debug_Tools.debug_msg("creating empty for node {}: {}".format(0, nodePack.pack[0].node_ID))
-            bpy.ops.object.empty_add(type='PLAIN_AXES', radius=0.5, align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0))
+            bpy.ops.object.empty_add(type='PLAIN_AXES', radius=0.5, align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0)) # NOTE creating object makes it active object
             bpy.context.active_object.name = 'node.000'
             #bpy.data.objects[-1].name = 'node.000'
             for count, node_ in enumerate(nodePack.pack[1:]):
                 Debug_Tools.debug_msg("creating empty for node {}: {}".format(count+1, node_.node_ID))
                 curr_node_empty = bpy.context.active_object
+                occupied_locs.append(curr_node_empty.location)
                 # each node can have 26 neighbors
                 # TODO pick a random number btw 1 to 26
-                rand_pos = random.randint(0,25)
+                rand_pos = generate_rand_pos()
                 Debug_Tools.debug_msg('rand_pos: {}'.format(rand_pos))
-                # TODO reposition the corner_piece to the node.xxx location
-                # bpy.context.view_layer.objects.active = bpy.data.objects['corner_piece']
-                bpy.data.objects['corner_piece'].location = curr_node_empty.location
-                # bpy.data.objects['corner_piece'].data.vertices[5].co.copy()
                 # TODO get the new location for next node empty
-                next_loc = tuple(bpy.data.objects['corner_piece'].data.vertices[rand_pos].co)
+                # NOTE need world locations not local
+                next_loc = bpy.data.objects['corner_piece'].data.vertices[rand_pos].co + curr_node_empty.location
+                occupied_locs.append(next_loc)
                 # TODO create the next node empty
                 bpy.ops.object.empty_add(type='PLAIN_AXES', radius=0.5, align='WORLD', location=next_loc, rotation=(0, 0, 0))
                 bpy.context.active_object.name = 'node.000'
                 
         
-        visualiser1(node_pack_data)
+        generate_empties(node_pack_data)
+        
         
         Debug_Tools.debug_msg("Create viz ENDED")
         Debug_Tools.debug_msg("----------------------------------------------------------------")
