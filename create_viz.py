@@ -92,7 +92,7 @@ class CreateViz_OT_Operator(bpy.types.Operator):
         # bpy.data.screens['Scripting'].areas[0].ui_type
         # bpy.data.workspaces['Layout'].screens['Layout'].areas[3].ui_type
         # bpy.ops.screen.area_dupli()
-        if True:
+        if False:
             context = bpy.context.copy()
             for area in bpy.context.screen.areas:
                 if area.type == 'VIEW_3D':
