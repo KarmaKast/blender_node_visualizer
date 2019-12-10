@@ -1,0 +1,7 @@
+.git
+.gitignore
+.gitmodules
+.vscode/
+__pycache__/
+releases/
+addon_workspace.code-workspace
