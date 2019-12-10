@@ -1,1 +1,8 @@
-__pycache__
+__pycache__/
+node_visualiser.zip
+releases/
+addon_wrokspace.code-workspace
+build/
+.vscode/
+
+*.code-workspace

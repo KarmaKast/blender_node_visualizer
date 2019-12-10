@@ -17,12 +17,13 @@
 
 bl_info = {
     "name" : "Node_Viz",
-    "author" : "Sree Chandan R",
     "description" : "visualization addon for nodeLib databases",
-    "blender" : (2, 80, 0),
+    "author" : "Sree Chandan R",
+    "blender" : (2, 80, 1),
     "version" : (0, 0, 1),
     "location" : "View3D",
     "warning" : "",
+    "wiki_url": "https://github.com/SreeChandan/blender_node_visualizer",
     "category" : "Generic"
 }
 

@@ -56,4 +56,5 @@ class Main_PT_Panel(bpy.types.Panel):
         layout.prop(my_props, 'select_file_prop')
         
         row = layout.row()
+        row.operator_context = 'EXEC_DEFAULT'
         row.operator('view3d.create_ot_viz', text = "Create Visialization")
