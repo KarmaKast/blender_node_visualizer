@@ -26,8 +26,13 @@ DEV = False  # for print statements meant for debugging purposes
 if True:
     # TODO handle previous builds
     # mkdir -p build
+
     path = "build"
 
+    if path in os.listdir('.'):
+        for file in os.listdir(path+'/'):
+            os.remove(path+'/'+file)
+        os.rmdir(path)
     try:
         os.mkdir(os.path.join(cwd, path))
     except OSError as error:
