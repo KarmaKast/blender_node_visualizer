@@ -50,16 +50,19 @@ if True:
     # TODO Step 2: copy needed files to /build/.zip
 
     defaultBuildName = str.split(cwd, os.path.sep)[-1]
+    addonVersion = "0.0.2"
     buildName = defaultBuildName
+    addonName = "Node_Viz"
+    buildName = "%s%s%s" % (buildName, '-', addonVersion)
     newZip = zipfile.ZipFile(buildName+'.zip', mode='w')
-    shutil.move(defaultBuildName+'.zip', os.path.join(cwd, path))
+    shutil.move(buildName+'.zip', os.path.join(cwd, path))
 
     #add_to_zip(newZip, files)
 
     for file in files:
         if os.path.isfile(os.path.join(cwd, file)):
             newZip.write(os.path.join(
-                cwd, file), os.path.join(buildName, file), compress_type=zipfile.ZIP_DEFLATED)
+                cwd, file), os.path.join(addonName, file), compress_type=zipfile.ZIP_DEFLATED)
         elif os.path.isdir(os.path.join(cwd, file)):
             pass
             #add_dir_to_zip(newZip, cwd, file)
