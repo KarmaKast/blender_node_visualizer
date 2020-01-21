@@ -79,8 +79,8 @@ class CreateViz_OT_Operator(bpy.types.Operator):
         step 3: load database to visualize
         Currently nodeLib cannot export database. So create a sample database and load that.
         """
-        node_pack_data = node_dataLoader.load_data()
-
+        node_cluster = node_dataLoader.load_cluster()
+        nodeLib.cluster.describe(node_cluster)
         """
         step 4: create viz
         """
@@ -100,7 +100,7 @@ class CreateViz_OT_Operator(bpy.types.Operator):
                     bpy.ops.screen.area_dupli(context, 'INVOKE_DEFAULT')
                     break
 
-        def generate_empties(nodePack: nodeLib.structure.node_structs.NodePack_Struct):
+        def generate_empties(nodeCluster: nodeLib.structure.node_structs.NodeClusterStruct):
             def corner_piece_generator(regenerate=True):
                 layer_coll = bpy.context.view_layer.layer_collection.children['Node_data_Viz']
                 bpy.context.view_layer.active_layer_collection = layer_coll
@@ -152,16 +152,19 @@ class CreateViz_OT_Operator(bpy.types.Operator):
                 # still there is a possibility that there is no available location nearby.
                 return available_locations[rand_pos]
 
+            nodes_ = list(nodeCluster.nodes.values())
+
+
             # TODO center cursor
             bpy.ops.view3d.snap_cursor_to_center()
             # TODO create a empty/box with respective node_ID
             Debug_Tools.debug_msg("creating empty for node {}: {}".format(
-                0, nodePack.pack[0].node_ID))
+                0, nodes_[0].node_ID))
             bpy.ops.object.empty_add(type='PLAIN_AXES', radius=0.5, align='WORLD', location=(
                 0, 0, 0), rotation=(0, 0, 0))  # NOTE creating object makes it active object
             bpy.context.active_object.name = 'node.000'
             #bpy.data.objects[-1].name = 'node.000'
-            for count, node_ in enumerate(nodePack.pack[1:]):
+            for count, node_ in enumerate(nodes_[1:]):
                 Debug_Tools.debug_msg(
                     "creating empty for node {}: {}".format(count+1, node_.node_ID))
                 curr_node_empty = bpy.context.active_object
@@ -184,7 +187,7 @@ class CreateViz_OT_Operator(bpy.types.Operator):
             bpy.data.objects.remove(bpy.data.objects['corner_piece'])
 
         # TODO randomly generate empties for each node
-        generate_empties(node_pack_data)
+        generate_empties(node_cluster)
         # TODO generate a box and assign it to each empty
         bpy.ops.mesh.primitive_cube_add(
             size=0.25, enter_editmode=False, location=(0, 0, 0))

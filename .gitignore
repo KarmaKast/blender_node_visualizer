@@ -6,3 +6,7 @@ build/
 .vscode/
 
 *.code-workspace
+
+data/
+
+notes/

@@ -20,7 +20,7 @@ bl_info = {
     "description" : "visualization addon for nodeLib databases",
     "author" : "Sree Chandan R",
     "blender" : (2, 80, 1),
-    "version" : (0, 0, 2),
+    "version" : (0, 0, 3),
     "location" : "View3D",
     "warning" : "",
     "wiki_url": "https://github.com/SreeChandan/blender_node_visualizer",
