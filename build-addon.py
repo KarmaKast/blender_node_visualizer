@@ -26,8 +26,13 @@ DEV = False  # for print statements meant for debugging purposes
 if True:
     # TODO handle previous builds
     # mkdir -p build
+
     path = "build"
 
+    if path in os.listdir('.'):
+        for file in os.listdir(path+'/'):
+            os.remove(path+'/'+file)
+        os.rmdir(path)
     try:
         os.mkdir(os.path.join(cwd, path))
     except OSError as error:
@@ -44,13 +49,15 @@ if True:
     # TODO Step 2: parse .buildignore
 
     #files = parseIgnoreFile('.buildignore')
-    files = ["__init__.py", "cleanup.py", "debug.py", "LICENSE", "main_panel.py", "node_dataLoader.py", "create_viz.py", "nodeLib/debug.py", "nodeLib/LICENSE.txt",
-             "nodeLib/node.py", "nodeLib/query.py", "nodeLib/__init__.py", "nodeLib/README.md", "nodeLib/structure/__init__.py", "nodeLib/structure/node_structs.py"]
+    files = ["__init__.py", "cleanup.py", "debug.py", "LICENSE", "main_panel.py", "node_dataLoader.py", "create_viz.py", 
+             "nodeLib/debug.py", "nodeLib/LICENSE.txt", "nodeLib/node.py", "nodeLib/query.py", "nodeLib/__init__.py", "nodeLib/README.md", "nodeLib/structure/__init__.py", "nodeLib/structure/node_structs.py", "nodeLib/cluster.py", "nodeLib/files.py",
+             "nodeVizLib/README.md"
+             ]
 
     # TODO Step 2: copy needed files to /build/.zip
 
     defaultBuildName = str.split(cwd, os.path.sep)[-1]
-    addonVersion = "0.0.2"
+    addonVersion = "0.0.3"
     buildName = defaultBuildName
     addonName = "Node_Viz"
     buildName = "%s%s%s" % (buildName, '-', addonVersion)
